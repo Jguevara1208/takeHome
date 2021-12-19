@@ -9,7 +9,7 @@ const company = {
     roles: [
         {
             roleTitle: '',
-            salary: '',
+            salary: [0, 0],
             division: '',
             location: '',
             experience: ''
@@ -20,7 +20,7 @@ const company = {
 export const roleTemplate = () => {
     return {
         roleTitle: '',
-        salary: '',
+        salary: [0, 0],
         division: '',
         location: '',
         experience: ''

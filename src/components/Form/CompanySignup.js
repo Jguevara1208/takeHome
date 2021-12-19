@@ -32,7 +32,18 @@ const CompanySignup = () => {
     const handleInputChange = (e, idx=false) => {
         const { name, value } = e.target
         const companyCopy = { ...companyDetails }        
-        idx !== false ? companyCopy.roles[idx][name] = value : companyCopy[name] = value
+
+        idx !== false 
+            ? companyCopy.roles[idx][name] = value 
+            : companyCopy[name] = value
+
+        setCompanyDetails(companyCopy)
+    }
+
+    const handleSalaryChange = (e, idx) => {
+        const {value} = e.target
+        const companyCopy = { ...companyDetails }
+        companyCopy.roles[idx].salary = value
         setCompanyDetails(companyCopy)
     }
 
@@ -69,6 +80,7 @@ const CompanySignup = () => {
                         nextStep={nextStep}
                         prevStep={prevStep}
                         handleInputChange={handleInputChange}
+                        handleSalaryChange={handleSalaryChange}
                         addRole={addRole}
                         removeRole={removeRole}
                         roles={roles}
@@ -77,7 +89,6 @@ const CompanySignup = () => {
         case 3:
             return <Confirmation
                         prevStep={prevStep}
-                        handleInputChange={handleInputChange}
                         companyDetails={companyDetails}
                     />
         default:
