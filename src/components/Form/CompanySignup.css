@@ -50,3 +50,45 @@
     text-align: center;
     background-color: white;
 }
+
+/*          Role Details             */
+
+.role-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+    padding: 20px;
+    gap: 20px;
+}
+
+.role-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #ced8e2;
+}
+
+.role-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.role-header > button {
+    width: 50px;
+    height: 50px;
+}
+
+.slider {
+    align-self: center;
+}
+
+.role-buttons {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}

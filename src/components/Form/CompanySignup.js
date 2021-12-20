@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import company, { roleTemplate } from './CompanyData'
+import company from './CompanyData'
 
 import InfoIcon from '@mui/icons-material/Info';
 
@@ -18,77 +18,19 @@ import './CompanySignup.css';
 const CompanySignup = () => {
 
     const [ companyDetails, setCompanyDetails ] = useState(company)
-    const { roles } = companyDetails
-    const steps = ['Company Details', 'Roles', 'Confirmation']
+    const steps = ['Company Details', 'Role Details', 'Confirmation']
 
     const handleSubmit = () => {
         console.log(companyDetails)
     }
 
-    const prevStep = (e) => {
-        e.preventDefault()
-        if (companyDetails.step > 0) {
-            const companyCopy = { ...companyDetails }
-            companyCopy.step -= 1
-            setCompanyDetails(companyCopy)
-        }
-    }
-
-    const nextStep = (e) => {
-        e.preventDefault()
-        if (companyDetails.step < 2) {
-            const companyCopy = { ...companyDetails }
-            companyCopy.step += 1
-            setCompanyDetails(companyCopy)
-        }
-    }
-
-    const handleChange =  (e, obj) => {
-        e.preventDefault()
+    const handleChange =  (obj, stepNum) => {
         const companyCopy = { ...companyDetails }
         const keys = Object.keys(obj)
         keys.forEach(key => {
             companyCopy[key] = obj[key]
         })
-        companyCopy.step += 1
-        setCompanyDetails(companyCopy)
-    }
-
-    console.log(companyDetails)
-    const handleInputChange = (e, idx=false) => {
-        const { name, value } = e.target
-        const companyCopy = { ...companyDetails }        
-
-        idx !== false 
-            ? companyCopy.roles[idx][name] = value 
-            : companyCopy[name] = value
-
-        setCompanyDetails(companyCopy)
-    }
-
-    const handleSalaryChange = (e, idx) => {
-        const {value} = e.target
-        const companyCopy = { ...companyDetails }
-        companyCopy.roles[idx].salary = value
-        setCompanyDetails(companyCopy)
-    }
-
-    const addRole = (e) => {
-        e.preventDefault()
-        const companyCopy = { ...companyDetails }
-        const { roles } = companyCopy
-
-        if (roles.length < 3) {
-            roles.push(roleTemplate())
-            setCompanyDetails(companyCopy)
-        }
-    }
-
-    const removeRole = (e, idx) => {
-        e.preventDefault()
-        const companyCopy = { ...companyDetails }
-        const { roles } = companyCopy
-        roles.splice(idx, 1)
+        companyCopy.step += stepNum
         setCompanyDetails(companyCopy)
     }
 
@@ -119,18 +61,12 @@ const CompanySignup = () => {
                     )}            
                     {companyDetails.step === 1 && (
                         <RoleDetails 
-                                nextStep={nextStep}
-                                prevStep={prevStep}
-                                handleInputChange={handleInputChange}
-                                handleSalaryChange={handleSalaryChange}
-                                addRole={addRole}
-                                removeRole={removeRole}
-                                roles={roles}
+                                handleChange={handleChange}
+                                companyDetails={companyDetails}
                         />
                     )}
                     {companyDetails.step === 2 && (
                         <Confirmation
-                                prevStep={prevStep}
                                 companyDetails={companyDetails}
                                 handleSubmit={handleSubmit}
                         />

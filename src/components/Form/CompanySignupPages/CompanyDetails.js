@@ -9,7 +9,7 @@ import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
 
 const CompanyDetails = ({handleChange, companyDetails}) => {
-    
+
     const [username, setUsername] = useState(companyDetails.username)
     const [companyName, setCompanyName] = useState(companyDetails.companyName)
     const [location, setLocation] = useState(companyDetails.location)
@@ -27,9 +27,8 @@ const CompanyDetails = ({handleChange, companyDetails}) => {
         if (!companySize.length) errors['companySize'] = 'Company Size is required'
         if (!fundingStage.length) errors['fundingStage'] = 'Funding Stage is required'
         if (!username.length) errors['username'] = 'Company Username is required'
-        if (Object.keys(errors).length > 0) {
-            return errors
-        }
+        console.log(errors)
+        if (Object.keys(errors).length) return errors
         return true
     }
 
@@ -38,18 +37,27 @@ const CompanyDetails = ({handleChange, companyDetails}) => {
         const valid = isValid()
         if (valid === true) {
             setErrors({})
-            handleChange(e, {
+            handleChange({
                 username, companyName,
                 location, remoteWorkPolicy,
                 companySize, fundingStage
-            })
+            }, 1)
         } else {
             setErrors(valid)
         }
     }
 
+    const onBlurValidate = () => {
+        const valid = isValid()
+        if (Object.keys(valid).length) {
+            setErrors(valid)
+        } else {
+            setErrors({})
+        }
+    }
+
     return (
-        <form className='company-details-form'>
+        <form className='company-details-form' autocomplete="off" >
             <h1>Company Details</h1>
             <TextField 
                 id="outlined-basic" 
@@ -61,6 +69,7 @@ const CompanyDetails = ({handleChange, companyDetails}) => {
                 error={'username' in errors}
                 helperText={'username' in errors ? errors['username'] : ''}
                 onChange={(e) => setUsername(e.target.value)}
+                onBlur={onBlurValidate}
             />
             <TextField 
                 id="outlined-basic" 
@@ -72,6 +81,7 @@ const CompanyDetails = ({handleChange, companyDetails}) => {
                 helperText={'companyName' in errors ? errors['companyName'] : ''}
                 value={companyName} 
                 onChange={(e) => setCompanyName(e.target.value)}
+                onBlur={onBlurValidate}
             />
             <TextField 
                 id="outlined-basic" 
@@ -83,50 +93,56 @@ const CompanyDetails = ({handleChange, companyDetails}) => {
                 helperText={'location' in errors ? errors['location'] : ''}
                 value={location} 
                 onChange={(e) => setLocation(e.target.value)}
+                onBlur={onBlurValidate}
             />
             <TextField 
                 id="outlined-basic" 
                 label="Remote Work Policy" 
                 variant="outlined" 
+                multiline
+                rows={4}
                 name='remoteWorkPolicy'
                 required 
                 error={'remoteWorkPolicy' in errors}
                 helperText={'remoteWorkPolicy' in errors ? errors['remoteWorkPolicy'] : ''}
                 value={remoteWorkPolicy} 
                 onChange={(e) => setRemoteWorkPolicy(e.target.value)}
+                onBlur={onBlurValidate}
             />
             <FormControl sx={{ minWidth: 200 }} error={'companySize' in errors}>
-                <InputLabel id='company-size-label'>Company Size</InputLabel>
+                <InputLabel id='company-size-label'>Company Size *</InputLabel>
                 <Select 
                     labelId='company-size-label'
                     id='companySize'
-                    label='Company Size'
+                    label='Company Size *'
                     variant='outlined'
                     name='companySize'
                     required
                     error={'companySize' in errors}
                     value={companySize}
                     onChange={(e) => setCompanySize(e.target.value)}
+                    onBlur={onBlurValidate}
                 >
                     <MenuItem value='0-10' >0-10</MenuItem>
                     <MenuItem value='10-50' >10-50</MenuItem>
                     <MenuItem value='50-100' >50-100</MenuItem>
                     <MenuItem value='100+' >100+</MenuItem>
                 </Select>
-                 {'companySize' in errors && <FormHelperText>{errors['companySize']}</FormHelperText>}
+                {'companySize' in errors && <FormHelperText>{errors['companySize']}</FormHelperText>}
             </FormControl>
             <FormControl sx={{ minWidth: 200 }} error={'fundingStage' in errors}>
-                <InputLabel id='funding-stage-label'>Funding Stage</InputLabel>
+                <InputLabel id='funding-stage-label'>Funding Stage *</InputLabel>
                 <Select 
                     labelId='funding-stage-label'
                     id='funding-stage'
-                    label='Funding Stage'
+                    label='Funding Stage *'
                     variant='outlined'
                     name='fundingStage'
                     required
                     error={'fundingStage' in errors}
                     value={fundingStage}
                     onChange={(e) => setFundingStage(e.target.value)}
+                    onBlur={onBlurValidate}
                 >
                     <MenuItem value="Pre-seed">Pre-seed</MenuItem>
                     <MenuItem value="Seed">Seed</MenuItem>
