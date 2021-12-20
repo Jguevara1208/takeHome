@@ -1,43 +1,31 @@
 import { useState } from "react";
-
 import company from './CompanyData';
-
 import InfoIcon from '@mui/icons-material/Info';
-
 import CompanyDetails from './CompanySignupPages/CompanyDetails';
 import RoleDetails from './CompanySignupPages/RoleDetails';
 import Confirmation from './CompanySignupPages/Confirmation';
-
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
-
 import './CompanySignup.css';
 
 const CompanySignup = () => {
 
-    const [ companyDetails, setCompanyDetails ] = useState(company);
     const steps = ['Company Details', 'Role Details', 'Confirmation'];
+    const [ companyDetails, setCompanyDetails ] = useState(company);
 
     const handleSubmit = () => {
         const key = companyDetails.username.toLowerCase();
         const db = localStorage.getItem('companies');
-        const parsedDb = db ? {...JSON.parse(db), [key]: companyDetails} 
-                            : {[companyDetails.username]: companyDetails};
-
+        const parsedDb = db ? {...JSON.parse(db), [key]: companyDetails} : {[key]: companyDetails};
         localStorage.setItem('companies', JSON.stringify(parsedDb));
-        const companyCopy = { ...companyDetails };
-        companyCopy.step += 1;
-        setCompanyDetails(companyCopy);
     }
 
     const handleChange =  (obj, stepNum) => {
         const companyCopy = { ...companyDetails };
         const keys = Object.keys(obj);
-        keys.forEach(key => {
-            companyCopy[key] = obj[key];
-        });
+        keys.forEach(key => companyCopy[key] = obj[key]);
         companyCopy.step += stepNum;
         setCompanyDetails(companyCopy);
     }

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import {TextField} from '@material-ui/core'
+import { TextField } from '@material-ui/core'
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -7,7 +7,18 @@ import FormHelperText from '@mui/material/FormHelperText';
 import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
 
+import {
+    usernameValidations,
+    companyNameValidations,
+    locationValidations,
+    remoteWorkValidations,
+    companySizeValidations,
+    fundingStageValidations,
+    validationMap
+    } from './validations'
+
 const CompanyDetails = ({handleChange, companyDetails}) => {
+
     const [username, setUsername] = useState(companyDetails.username);
     const [companyName, setCompanyName] = useState(companyDetails.companyName);
     const [location, setLocation] = useState(companyDetails.location);
@@ -17,100 +28,118 @@ const CompanyDetails = ({handleChange, companyDetails}) => {
     const [errors, setErrors] = useState({});
 
     const isValid = () => {
-        const errors = {};
-        let companies = JSON.parse(localStorage.getItem('companies')) || {};
-        if (username.length < 5) errors['username'] = 'Username must be atleast 5 characters';
-        if (username.toLowerCase() in companies || username.toLowerCase() === 'talentdrop') errors['username'] = 'Username already exists';
-        if (/^\d+$/.test(username)) errors['username'] = 'Username cannot contain only numbers'
-        if (!companyName.length) errors['companyName'] = 'Company name is required';
-        if (/^\d+$/.test(companyName)) errors['companyName'] = 'Company name cannot contain only numbers'
-        if (!location.length) errors['location'] = 'Location is required';
-        if (/^\d+$/.test(location)) errors['location'] = 'Location cannot contain only numbers'
-        if (!remoteWorkPolicy.length) errors['remoteWorkPolicy'] = 'Remote Work Policy is required';
-        if (!companySize.length) errors['companySize'] = 'Company Size is required';
-        if (!fundingStage.length) errors['fundingStage'] = 'Funding Stage is required';
-        if (!username.length) errors['username'] = 'Company Username is required';
-        if (Object.keys(errors).length) return errors;
-        return true;
+        const errorsArr = [
+            usernameValidations(username),
+            companyNameValidations(companyName),
+            locationValidations(location),
+            remoteWorkValidations(remoteWorkPolicy),
+            companySizeValidations(companySize),
+            fundingStageValidations(fundingStage),
+        ]
+        return errorsArr.reduce((obj, err) => {
+                if (err !== null) obj[err[0]] = err[1]
+                return obj
+        }, {});
     };
-
 
     const handleContinue = (e) => {
         e.preventDefault();
+
         const valid = isValid();
-        if (valid === true) {
-            setErrors({});
-            handleChange({
-                username, companyName,
-                location, remoteWorkPolicy,
-                companySize, fundingStage
-            }, 1);
-        } else {
-            setErrors(valid);
-        };
+        const company = { 
+            username, companyName, 
+            location, remoteWorkPolicy, 
+            companySize, fundingStage 
+        }
+
+        if (!Object.keys(valid).length) handleChange(company, 1);
+        setErrors(valid);
     };
+
+    const handleChangeInput = (e) => {
+        const { name, value } = e.target
+        let res = validationMap[name](value)
+        const errorsCopy = {...errors}
+
+        if (res) errorsCopy[res[0]] = res[1] 
+        else if (name in errorsCopy) delete errorsCopy[name]
+        setErrors(errorsCopy)
+
+        switch (name) {
+            case 'username': return setUsername(value)
+            case 'companyName': return setCompanyName(value)
+            case 'location': return setLocation(value)
+            case 'remoteWorkPolicy': return setRemoteWorkPolicy(value)
+            case 'companySize': return setCompanySize(value)
+            case 'fundingStage': return setFundingStage(value)
+            default: return
+        }
+    }
 
     return (
         <form className='company-details-form' autoComplete="off" >
             <h1>Company Details</h1>
             <TextField 
-                id="outlined-basic" 
-                label="Company Username" 
                 variant="outlined" 
+                label="Company Username" 
+                id="outlined-basic" 
                 name='username' 
                 required
-                value={username} 
                 error={'username' in errors}
                 helperText={'username' in errors ? errors['username'] : ''}
-                onChange={(e) => setUsername(e.target.value)}
+                value={username} 
+                onChange={handleChangeInput}
             />
             <TextField 
-                id="outlined-basic" 
-                label="Company Name" 
                 variant="outlined" 
+                label="Company Name" 
+                id="outlined-basic" 
                 name='companyName'
                 required
                 error={'companyName' in errors}
                 helperText={'companyName' in errors ? errors['companyName'] : ''}
                 value={companyName} 
-                onChange={(e) => setCompanyName(e.target.value)}
+                onChange={handleChangeInput}
             />
             <TextField 
-                id="outlined-basic" 
-                label="Location" 
                 variant="outlined" 
+                label="Location" 
+                id="outlined-basic" 
                 name='location' 
                 required
                 error={'location' in errors}
                 helperText={'location' in errors ? errors['location'] : ''}
                 value={location} 
-                onChange={(e) => setLocation(e.target.value)}
+                onChange={handleChangeInput}
             />
             <TextField 
-                id="outlined-basic" 
-                label="Remote Work Policy" 
                 variant="outlined" 
+                label="Remote Work Policy" 
+                id="outlined-basic" 
+                name='remoteWorkPolicy'
                 multiline
                 rows={4}
-                name='remoteWorkPolicy'
                 required 
                 error={'remoteWorkPolicy' in errors}
                 helperText={'remoteWorkPolicy' in errors ? errors['remoteWorkPolicy'] : ''}
                 value={remoteWorkPolicy} 
-                onChange={(e) => setRemoteWorkPolicy(e.target.value)}
+                onChange={handleChangeInput}
             />
-            <FormControl sx={{ minWidth: 200 }} error={'companySize' in errors}>
+            <FormControl 
+                sx={{ minWidth: 200 }}
+                error={'companySize' in errors}
+            >
                 <InputLabel id='company-size-label'>Company Size *</InputLabel>
                 <Select 
-                    labelId='company-size-label'
-                    id='companySize'
-                    label='Company Size *'
                     variant='outlined'
+                    labelId='company-size-label'
+                    label='Company Size *'
+                    id='companySize'
                     name='companySize'
                     required
                     error={'companySize' in errors}
                     value={companySize}
-                    onChange={(e) => {setCompanySize(e.target.value)}}
+                    onChange={handleChangeInput}
 
                 >
                     <MenuItem value='0-10' >0-10</MenuItem>
@@ -118,20 +147,25 @@ const CompanyDetails = ({handleChange, companyDetails}) => {
                     <MenuItem value='50-100' >50-100</MenuItem>
                     <MenuItem value='100+' >100+</MenuItem>
                 </Select>
-                {'companySize' in errors && <FormHelperText>{errors['companySize']}</FormHelperText>}
+                {'companySize' in errors && (
+                    <FormHelperText>{errors['companySize']}</FormHelperText>
+                )}
             </FormControl>
-            <FormControl sx={{ minWidth: 200 }} error={'fundingStage' in errors}>
+            <FormControl 
+                sx={{ minWidth: 200 }} 
+                error={'fundingStage' in errors}
+            >
                 <InputLabel id='funding-stage-label'>Funding Stage *</InputLabel>
                 <Select 
-                    labelId='funding-stage-label'
-                    id='funding-stage'
-                    label='Funding Stage *'
                     variant='outlined'
+                    labelId='funding-stage-label'
+                    label='Funding Stage *'
+                    id='funding-stage'
                     name='fundingStage'
                     required
                     error={'fundingStage' in errors}
                     value={fundingStage}
-                    onChange={(e) => setFundingStage(e.target.value)}
+                    onChange={handleChangeInput}
 
                 >
                     <MenuItem value="Pre-seed">Pre-seed</MenuItem>
@@ -140,14 +174,20 @@ const CompanyDetails = ({handleChange, companyDetails}) => {
                     <MenuItem value="Series B">Series B</MenuItem>
                     <MenuItem value="Series C">Series C</MenuItem>
                 </Select>
-                 {'fundingStage' in errors && <FormHelperText>{errors['fundingStage']}</FormHelperText>}
+                 {'fundingStage' in errors && (
+                    <FormHelperText>{errors['fundingStage']}</FormHelperText>
+                )}
             </FormControl>
             <Button 
-                style={{textTransform: 'none', maxWidth: '100px', alignSelf: 'flex-end'}} 
                 variant="contained" 
+                size='medium'
                 disableElevation 
                 onClick={handleContinue} 
-                size='medium'
+                style={{
+                    textTransform: 'none',
+                    maxWidth: '100px',
+                    alignSelf: 'flex-end'
+                }} 
             >
                 Continue
             </Button>
