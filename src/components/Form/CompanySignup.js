@@ -21,7 +21,15 @@ const CompanySignup = () => {
     const steps = ['Company Details', 'Role Details', 'Confirmation']
 
     const handleSubmit = () => {
-        
+        const key = companyDetails.username.toLowerCase()
+        const db = localStorage.getItem('companies')
+        const parsedDb = db ? {...JSON.parse(db), [key]: companyDetails} 
+                            : {[companyDetails.username]: companyDetails}
+
+        localStorage.setItem('companies', JSON.stringify(parsedDb))
+        const companyCopy = { ...companyDetails }
+        companyCopy.step += 1
+        setCompanyDetails(companyCopy)
     }
 
     const handleChange =  (obj, stepNum) => {
@@ -69,7 +77,11 @@ const CompanySignup = () => {
                         <Confirmation
                                 companyDetails={companyDetails}
                                 handleSubmit={handleSubmit}
+                                handleChange={handleChange}
                         />
+                    )}
+                    {companyDetails.step === 3 && (
+                        <h1>You did it!</h1>
                     )}
                 </div>
             </div>

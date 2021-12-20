@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import {TextField} from '@material-ui/core'
 import InputLabel from '@mui/material/InputLabel';
@@ -19,7 +19,9 @@ const CompanyDetails = ({handleChange, companyDetails}) => {
 
     const isValid = () => {
         const errors = {}
+        let companies = JSON.parse(localStorage.getItem('companies')) || {}
         if (username.length < 5) errors['username'] = 'Username must be atleast 5 characters'
+        if (username.toLowerCase() in companies || username.toLowerCase() === 'talentdrop') errors['username'] = 'Username already exists'
         if (!companyName.length) errors['companyName'] = 'Company name is required'
         if (!location.length) errors['location'] = 'Location is required'
         if (!remoteWorkPolicy.length) errors['remoteWorkPolicy'] = 'Remote Work Policy is required'
@@ -46,15 +48,6 @@ const CompanyDetails = ({handleChange, companyDetails}) => {
         }
     }
 
-    const onBlurValidate = () => {
-        const valid = isValid()
-        if (Object.keys(valid).length) {
-            setErrors(valid)
-        } else {
-            setErrors({})
-        }
-    }
-
     return (
         <form className='company-details-form' autoComplete="off" >
             <h1>Company Details</h1>
@@ -68,7 +61,6 @@ const CompanyDetails = ({handleChange, companyDetails}) => {
                 error={'username' in errors}
                 helperText={'username' in errors ? errors['username'] : ''}
                 onChange={(e) => setUsername(e.target.value)}
-                onBlur={onBlurValidate}
             />
             <TextField 
                 id="outlined-basic" 
@@ -80,7 +72,6 @@ const CompanyDetails = ({handleChange, companyDetails}) => {
                 helperText={'companyName' in errors ? errors['companyName'] : ''}
                 value={companyName} 
                 onChange={(e) => setCompanyName(e.target.value)}
-                onBlur={onBlurValidate}
             />
             <TextField 
                 id="outlined-basic" 
@@ -92,7 +83,6 @@ const CompanyDetails = ({handleChange, companyDetails}) => {
                 helperText={'location' in errors ? errors['location'] : ''}
                 value={location} 
                 onChange={(e) => setLocation(e.target.value)}
-                onBlur={onBlurValidate}
             />
             <TextField 
                 id="outlined-basic" 
@@ -106,7 +96,6 @@ const CompanyDetails = ({handleChange, companyDetails}) => {
                 helperText={'remoteWorkPolicy' in errors ? errors['remoteWorkPolicy'] : ''}
                 value={remoteWorkPolicy} 
                 onChange={(e) => setRemoteWorkPolicy(e.target.value)}
-                onBlur={onBlurValidate}
             />
             <FormControl sx={{ minWidth: 200 }} error={'companySize' in errors}>
                 <InputLabel id='company-size-label'>Company Size *</InputLabel>
@@ -120,7 +109,7 @@ const CompanyDetails = ({handleChange, companyDetails}) => {
                     error={'companySize' in errors}
                     value={companySize}
                     onChange={(e) => {setCompanySize(e.target.value)}}
-                    onFocus={onBlurValidate}
+
                 >
                     <MenuItem value='0-10' >0-10</MenuItem>
                     <MenuItem value='10-50' >10-50</MenuItem>
@@ -141,7 +130,7 @@ const CompanyDetails = ({handleChange, companyDetails}) => {
                     error={'fundingStage' in errors}
                     value={fundingStage}
                     onChange={(e) => setFundingStage(e.target.value)}
-                    onFocus={onBlurValidate}
+
                 >
                     <MenuItem value="Pre-seed">Pre-seed</MenuItem>
                     <MenuItem value="Seed">Seed</MenuItem>

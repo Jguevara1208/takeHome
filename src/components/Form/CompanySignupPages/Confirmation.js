@@ -1,5 +1,6 @@
+import Button from '@mui/material/Button';
 
-const Confirmation = ({companyDetails, handleSubmit}) => {
+const Confirmation = ({companyDetails, handleSubmit, handleChange}) => {
     return (
         <div>
             <p>Company username: {companyDetails.username}</p>
@@ -17,6 +18,26 @@ const Confirmation = ({companyDetails, handleSubmit}) => {
                         <p>Experience required: {role.experience}</p>
                 </div>
             ))}
+            <div className='role-buttons'>
+                <Button
+                    style={{textTransform: 'none'}}
+                    variant="contained"
+                    disableElevation
+                    onClick={() => handleChange({}, -1)}
+                    size='medium'
+                >
+                    Previous
+                </Button>
+                <Button
+                    style={{textTransform: 'none'}}
+                    variant="contained"
+                    disableElevation
+                    onClick={(e) => handleSubmit(e)}
+                    size='medium'
+                >
+                    Submit
+                </Button>
+            </div>
         </div>
     );
 };

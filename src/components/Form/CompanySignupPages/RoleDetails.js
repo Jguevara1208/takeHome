@@ -1,5 +1,4 @@
 import { useState } from 'react';
-
 import { roleTemplate } from '../CompanyData';
 
 import {TextField} from '@material-ui/core'
@@ -12,7 +11,6 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
 import FormHelperText from '@mui/material/FormHelperText';
-
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
@@ -23,7 +21,7 @@ const RoleDetails = ({companyDetails, handleChange}) => {
     const [rolesState, setRolesState] = useState(companyDetails.roles)
     const [errors, setErrors] = useState(new Array(companyDetails.roles.length).fill({}))
 
-    const isValid = (rolesState) => {
+    const isValid = () => {
         const tempErrors = []
         let isError = false
         rolesState.forEach(role => {
@@ -76,6 +74,8 @@ const RoleDetails = ({companyDetails, handleChange}) => {
 
     const handleContinue = (e, next=false) => {
         e.preventDefault()
+        console.log(next)
+        console.log(!next)
         if (!next) {
             handleChange({roles: rolesState}, -1)
             return
@@ -124,7 +124,6 @@ const RoleDetails = ({companyDetails, handleChange}) => {
                         helperText={'roleTitle' in errors[idx] ? errors[idx]['roleTitle'] : ''}
                         value={role.roleTitle}
                         onChange={(e) => handleInputChange(e, idx)}
-                        onBlur={onBlurValidate}
                     />
                     <FormControl sx={{ minWidth: 200 }} error={'division' in errors[idx]}>
                         <InputLabel id='division-label'>Division *</InputLabel>
@@ -138,7 +137,6 @@ const RoleDetails = ({companyDetails, handleChange}) => {
                             error={'division' in errors[idx]}
                             value={role.division}
                             onChange={(e) => handleInputChange(e, idx)}
-                            onFocus={onBlurValidate}
                         >
                             {divisions.map(div => <MenuItem key={div} value={div} >{div}</MenuItem> )}
                         </Select>
@@ -154,7 +152,6 @@ const RoleDetails = ({companyDetails, handleChange}) => {
                         helperText={'location' in errors[idx] ? errors[idx]['location'] : ''}
                         value={role.location}
                         onChange={(e) => handleInputChange(e, idx)}
-                        onBlur={onBlurValidate}
                     />
                     <TextField
                         type='number'
@@ -169,7 +166,6 @@ const RoleDetails = ({companyDetails, handleChange}) => {
                         helperText={'experience' in errors[idx] ? errors[idx]['experience'] : ''}
                         value={role.experience}
                         onChange={(e) => handleInputChange(e, idx)}
-                        onBlur={onBlurValidate}
                     />
                     <Box className='slider' sx={{width: '95%'}}>
                         <InputLabel id='salary-label' error={'salary' in errors[idx]}>Salary {'salary' in errors[idx] && <FormHelperText style={{color: '#f44336'}}>{errors[idx]['salary']}</FormHelperText>}</InputLabel>
@@ -179,7 +175,6 @@ const RoleDetails = ({companyDetails, handleChange}) => {
                             max={300}
                             value={role.salary}
                             onChange={(e) => handleSalaryChange(e, idx)}
-                            onBlur={onBlurValidate}
                             valueLabelDisplay="auto"
                         />
                         <InputLabel id="non-linear-slider" error={'salary' in errors[idx]}>
