@@ -16,85 +16,74 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 const RoleDetails = ({companyDetails, handleChange}) => {
 
-    const divisions = ['Engineering', 'HR', 'Sales', 'Finance', 'Operations', 'People', 'Product', 'Data']
+    const divisions = ['Engineering', 'HR', 'Sales', 'Finance', 'Operations', 'People', 'Product', 'Data'];
 
-    const [rolesState, setRolesState] = useState(companyDetails.roles)
-    const [errors, setErrors] = useState(new Array(companyDetails.roles.length).fill({}))
+    const [rolesState, setRolesState] = useState(companyDetails.roles);
+    const [errors, setErrors] = useState(new Array(companyDetails.roles.length).fill({}));
 
     const isValid = () => {
-        const tempErrors = []
-        let isError = false
+        const tempErrors = [];
+        let isError = false;
         rolesState.forEach(role => {
-            const roleErrors = {}
-            const { roleTitle, salary, division, location, experience } = role
-            if (!roleTitle.length) roleErrors['roleTitle'] = 'Role title is required'
-            if (!division.length) roleErrors['division'] = 'Role division is required'
-            if (!location.length) roleErrors['location'] = 'Role location is required'
-            if (!experience.length) roleErrors['experience'] = 'Role years of experience is required'
-            if (salary[0] === 0 && salary[1] === 0) roleErrors['salary'] = 'Role salary is required'
-            if (Object.keys(roleErrors).length) isError = true
-            tempErrors.push(roleErrors)
-        })
-        if (isError) return tempErrors
-        return true
+            const roleErrors = {};
+            const { roleTitle, salary, division, location, experience } = role;
+            if (!roleTitle.length) roleErrors['roleTitle'] = 'Role title is required';
+            if (!division.length) roleErrors['division'] = 'Role division is required';
+            if (!location.length) roleErrors['location'] = 'Role location is required';
+            if (!experience.length) roleErrors['experience'] = 'Role years of experience is required';
+            if (salary[0] === 0 && salary[1] === 0) roleErrors['salary'] = 'Role salary is required';
+            if (Object.keys(roleErrors).length) isError = true;
+            tempErrors.push(roleErrors);
+        });
+        if (isError) return tempErrors;
+        return true;
     }
 
     const handleInputChange = (e, idx) => {
-        const { name, value } = e.target
-        const rolesCopy = [...rolesState]
-        rolesCopy[idx][name] = value
-        setRolesState(rolesCopy)
+        const { name, value } = e.target;
+        const rolesCopy = [...rolesState];
+        rolesCopy[idx][name] = value;
+        setRolesState(rolesCopy);
     }
 
     const addRole = (e) => {
-        e.preventDefault()
-        const rolesCopy = [...rolesState]
+        e.preventDefault();
+        const rolesCopy = [...rolesState];
         if (rolesCopy.length < 3) {
-            setErrors([...errors, {}])
-            setRolesState([...rolesCopy, roleTemplate()])
+            setErrors([...errors, {}]);
+            setRolesState([...rolesCopy, roleTemplate()]);
         }
     }
 
     const removeRole = (e, idx) => {
-        e.preventDefault()
-        const rolesCopy = [...rolesState]
-        const errorsCopy = [...errors]
-        rolesCopy.splice(idx, 1)
-        errorsCopy.splice(idx, 1)
-        setErrors(errorsCopy)
-        setRolesState(rolesCopy)
+        e.preventDefault();
+        const rolesCopy = [...rolesState];
+        const errorsCopy = [...errors];
+        rolesCopy.splice(idx, 1);
+        errorsCopy.splice(idx, 1);
+        setErrors(errorsCopy);
+        setRolesState(rolesCopy);
     }
 
     const handleSalaryChange = (e, idx) => {
-        const {value} = e.target
-        const rolesCopy = [...rolesState]
-        rolesCopy[idx].salary = value
-        setRolesState(rolesCopy)
+        const {value} = e.target;
+        const rolesCopy = [...rolesState];
+        rolesCopy[idx].salary = value;
+        setRolesState(rolesCopy);
     }
 
     const handleContinue = (e, next=false) => {
-        e.preventDefault()
-        console.log(next)
-        console.log(!next)
+        e.preventDefault();
         if (!next) {
-            handleChange({roles: rolesState}, -1)
-            return
+            handleChange({roles: rolesState}, -1);
+            return;
         }
-        const valid = isValid()
+        const valid = isValid(); 
         if (valid === true) {
-            setErrors([{}])
-            handleChange({roles: rolesState}, 1)
+            setErrors([{}]);
+            handleChange({roles: rolesState}, 1);
         } else {
-            setErrors(valid)
-        }
-    }
-
-    const onBlurValidate = () => {
-        const valid = isValid()
-        if (typeof valid !== 'boolean') {
-            setErrors(valid)
-        } else {
-            setErrors(new Array(rolesState.length).fill({}))
+            setErrors(valid);
         }
     }
 
@@ -168,7 +157,13 @@ const RoleDetails = ({companyDetails, handleChange}) => {
                         onChange={(e) => handleInputChange(e, idx)}
                     />
                     <Box className='slider' sx={{width: '95%'}}>
-                        <InputLabel id='salary-label' error={'salary' in errors[idx]}>Salary {'salary' in errors[idx] && <FormHelperText style={{color: '#f44336'}}>{errors[idx]['salary']}</FormHelperText>}</InputLabel>
+                        <InputLabel id='salary-label' error={'salary' in errors[idx]}>
+                            Salary {'salary' in errors[idx] && (
+                                <FormHelperText style={{color: '#f44336'}}>
+                                    {errors[idx]['salary']}
+                                </FormHelperText>
+                                )}
+                        </InputLabel>
                         <Slider
                             min={50}
                             step={5}
@@ -177,7 +172,10 @@ const RoleDetails = ({companyDetails, handleChange}) => {
                             onChange={(e) => handleSalaryChange(e, idx)}
                             valueLabelDisplay="auto"
                         />
-                        <InputLabel id="non-linear-slider" error={'salary' in errors[idx]}>
+                        <InputLabel 
+                            id="non-linear-slider"
+                            error={'salary' in errors[idx]}
+                        >
                             {role.salary[0] !== role.salary[1]
                             ?
                                 `$${role.salary[0]}K - $${role.salary[1]}K`

@@ -1,5 +1,4 @@
 import { useState } from 'react';
-
 import {TextField} from '@material-ui/core'
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -9,44 +8,47 @@ import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
 
 const CompanyDetails = ({handleChange, companyDetails}) => {
-    const [username, setUsername] = useState(companyDetails.username)
-    const [companyName, setCompanyName] = useState(companyDetails.companyName)
-    const [location, setLocation] = useState(companyDetails.location)
-    const [remoteWorkPolicy, setRemoteWorkPolicy] = useState(companyDetails.remoteWorkPolicy)
-    const [companySize, setCompanySize] = useState(companyDetails.companySize)
-    const [fundingStage, setFundingStage] = useState(companyDetails.fundingStage)
-    const [errors, setErrors] = useState({})
+    const [username, setUsername] = useState(companyDetails.username);
+    const [companyName, setCompanyName] = useState(companyDetails.companyName);
+    const [location, setLocation] = useState(companyDetails.location);
+    const [remoteWorkPolicy, setRemoteWorkPolicy] = useState(companyDetails.remoteWorkPolicy);
+    const [companySize, setCompanySize] = useState(companyDetails.companySize);
+    const [fundingStage, setFundingStage] = useState(companyDetails.fundingStage);
+    const [errors, setErrors] = useState({});
 
     const isValid = () => {
-        const errors = {}
-        let companies = JSON.parse(localStorage.getItem('companies')) || {}
-        if (username.length < 5) errors['username'] = 'Username must be atleast 5 characters'
-        if (username.toLowerCase() in companies || username.toLowerCase() === 'talentdrop') errors['username'] = 'Username already exists'
-        if (!companyName.length) errors['companyName'] = 'Company name is required'
-        if (!location.length) errors['location'] = 'Location is required'
-        if (!remoteWorkPolicy.length) errors['remoteWorkPolicy'] = 'Remote Work Policy is required'
-        if (!companySize.length) errors['companySize'] = 'Company Size is required'
-        if (!fundingStage.length) errors['fundingStage'] = 'Funding Stage is required'
-        if (!username.length) errors['username'] = 'Company Username is required'
-        if (Object.keys(errors).length) return errors
-        return true
-    }
+        const errors = {};
+        let companies = JSON.parse(localStorage.getItem('companies')) || {};
+        if (username.length < 5) errors['username'] = 'Username must be atleast 5 characters';
+        if (username.toLowerCase() in companies || username.toLowerCase() === 'talentdrop') errors['username'] = 'Username already exists';
+        if (/^\d+$/.test(username)) errors['username'] = 'Username cannot contain only numbers'
+        if (!companyName.length) errors['companyName'] = 'Company name is required';
+        if (/^\d+$/.test(companyName)) errors['companyName'] = 'Company name cannot contain only numbers'
+        if (!location.length) errors['location'] = 'Location is required';
+        if (/^\d+$/.test(location)) errors['location'] = 'Location cannot contain only numbers'
+        if (!remoteWorkPolicy.length) errors['remoteWorkPolicy'] = 'Remote Work Policy is required';
+        if (!companySize.length) errors['companySize'] = 'Company Size is required';
+        if (!fundingStage.length) errors['fundingStage'] = 'Funding Stage is required';
+        if (!username.length) errors['username'] = 'Company Username is required';
+        if (Object.keys(errors).length) return errors;
+        return true;
+    };
 
 
     const handleContinue = (e) => {
-        e.preventDefault()
-        const valid = isValid()
+        e.preventDefault();
+        const valid = isValid();
         if (valid === true) {
-            setErrors({})
+            setErrors({});
             handleChange({
                 username, companyName,
                 location, remoteWorkPolicy,
                 companySize, fundingStage
-            }, 1)
+            }, 1);
         } else {
-            setErrors(valid)
-        }
-    }
+            setErrors(valid);
+        };
+    };
 
     return (
         <form className='company-details-form' autoComplete="off" >

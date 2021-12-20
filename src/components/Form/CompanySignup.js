@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import company from './CompanyData'
+import company from './CompanyData';
 
 import InfoIcon from '@mui/icons-material/Info';
 
@@ -17,29 +17,29 @@ import './CompanySignup.css';
 
 const CompanySignup = () => {
 
-    const [ companyDetails, setCompanyDetails ] = useState(company)
-    const steps = ['Company Details', 'Role Details', 'Confirmation']
+    const [ companyDetails, setCompanyDetails ] = useState(company);
+    const steps = ['Company Details', 'Role Details', 'Confirmation'];
 
     const handleSubmit = () => {
-        const key = companyDetails.username.toLowerCase()
-        const db = localStorage.getItem('companies')
+        const key = companyDetails.username.toLowerCase();
+        const db = localStorage.getItem('companies');
         const parsedDb = db ? {...JSON.parse(db), [key]: companyDetails} 
-                            : {[companyDetails.username]: companyDetails}
+                            : {[companyDetails.username]: companyDetails};
 
-        localStorage.setItem('companies', JSON.stringify(parsedDb))
-        const companyCopy = { ...companyDetails }
-        companyCopy.step += 1
-        setCompanyDetails(companyCopy)
+        localStorage.setItem('companies', JSON.stringify(parsedDb));
+        const companyCopy = { ...companyDetails };
+        companyCopy.step += 1;
+        setCompanyDetails(companyCopy);
     }
 
     const handleChange =  (obj, stepNum) => {
-        const companyCopy = { ...companyDetails }
-        const keys = Object.keys(obj)
+        const companyCopy = { ...companyDetails };
+        const keys = Object.keys(obj);
         keys.forEach(key => {
-            companyCopy[key] = obj[key]
-        })
-        companyCopy.step += stepNum
-        setCompanyDetails(companyCopy)
+            companyCopy[key] = obj[key];
+        });
+        companyCopy.step += stepNum;
+        setCompanyDetails(companyCopy);
     }
 
     return (
@@ -81,7 +81,10 @@ const CompanySignup = () => {
                         />
                     )}
                     {companyDetails.step === 3 && (
-                        <h1>You did it!</h1>
+                        <>
+                            <h3>Your submission has been accepted</h3>
+                            <p>We will review your information and get back to you soon!</p>
+                        </>
                     )}
                 </div>
             </div>
