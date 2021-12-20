@@ -105,19 +105,19 @@ const RoleDetails = ({ nextStep, prevStep, handleInputChange, roles, addRole, re
                 style={{textTransform: 'none'}} 
                 variant="contained" 
                 disableElevation 
-                onClick={nextStep} 
+                onClick={prevStep} 
                 size='medium'
             >
-                Continue
+                Previous
             </Button>
             <Button 
                 style={{textTransform: 'none'}} 
                 variant="contained" 
                 disableElevation 
-                onClick={prevStep} 
+                onClick={nextStep} 
                 size='medium'
             >
-                Previous
+                Continue
             </Button>
         </form>
     );

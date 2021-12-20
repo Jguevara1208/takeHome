@@ -1,5 +1,5 @@
 const company = {
-    step: 1,
+    step: 0,
     username: '',
     companyName: '',
     location: '',

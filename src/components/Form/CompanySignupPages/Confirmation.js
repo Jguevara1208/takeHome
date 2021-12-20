@@ -1,5 +1,5 @@
 
-const Confirmation = ({prevStep, companyDetails}) => {
+const Confirmation = ({prevStep, companyDetails, handleSubmit}) => {
     return (
         <div>
             <div className=''>
@@ -41,6 +41,7 @@ const Confirmation = ({prevStep, companyDetails}) => {
                     </div>
                 ))}
             </div>
+
         </div>
     );
 };

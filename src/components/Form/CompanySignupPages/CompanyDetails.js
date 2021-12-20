@@ -1,47 +1,101 @@
+import { useState } from 'react';
+
 import {TextField} from '@material-ui/core'
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
 import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
 
-const CompanyDetails = ({nextStep, handleInputChange, companyDetails}) => {
+const CompanyDetails = ({handleChange, companyDetails}) => {
+    
+    const [username, setUsername] = useState(companyDetails.username)
+    const [companyName, setCompanyName] = useState(companyDetails.companyName)
+    const [location, setLocation] = useState(companyDetails.location)
+    const [remoteWorkPolicy, setRemoteWorkPolicy] = useState(companyDetails.remoteWorkPolicy)
+    const [companySize, setCompanySize] = useState(companyDetails.companySize)
+    const [fundingStage, setFundingStage] = useState(companyDetails.fundingStage)
+    const [errors, setErrors] = useState({})
+
+    const isValid = () => {
+        const errors = {}
+        if (username.length < 5) errors['username'] = 'Username must be atleast 5 characters'
+        if (!companyName.length) errors['companyName'] = 'Company name is required'
+        if (!location.length) errors['location'] = 'Location is required'
+        if (!remoteWorkPolicy.length) errors['remoteWorkPolicy'] = 'Remote Work Policy is required'
+        if (!companySize.length) errors['companySize'] = 'Company Size is required'
+        if (!fundingStage.length) errors['fundingStage'] = 'Funding Stage is required'
+        if (!username.length) errors['username'] = 'Company Username is required'
+        if (Object.keys(errors).length > 0) {
+            return errors
+        }
+        return true
+    }
+
+    const handleContinue = (e) => {
+        e.preventDefault()
+        const valid = isValid()
+        if (valid === true) {
+            setErrors({})
+            handleChange(e, {
+                username, companyName,
+                location, remoteWorkPolicy,
+                companySize, fundingStage
+            })
+        } else {
+            setErrors(valid)
+        }
+    }
 
     return (
-        <form>
+        <form className='company-details-form'>
+            <h1>Company Details</h1>
             <TextField 
                 id="outlined-basic" 
                 label="Company Username" 
                 variant="outlined" 
                 name='username' 
-                value={companyDetails.username} 
-                onChange={(e) => handleInputChange(e)}
+                required
+                value={username} 
+                error={'username' in errors}
+                helperText={'username' in errors ? errors['username'] : ''}
+                onChange={(e) => setUsername(e.target.value)}
             />
             <TextField 
                 id="outlined-basic" 
                 label="Company Name" 
                 variant="outlined" 
                 name='companyName'
-                value={companyDetails.companyName} 
-                onChange={(e) => handleInputChange(e)}
+                required
+                error={'companyName' in errors}
+                helperText={'companyName' in errors ? errors['companyName'] : ''}
+                value={companyName} 
+                onChange={(e) => setCompanyName(e.target.value)}
             />
             <TextField 
                 id="outlined-basic" 
                 label="Location" 
                 variant="outlined" 
                 name='location' 
-                value={companyDetails.location} 
-                onChange={(e) => handleInputChange(e)}
+                required
+                error={'location' in errors}
+                helperText={'location' in errors ? errors['location'] : ''}
+                value={location} 
+                onChange={(e) => setLocation(e.target.value)}
             />
             <TextField 
                 id="outlined-basic" 
                 label="Remote Work Policy" 
                 variant="outlined" 
-                name='remoteWorkPolicy' 
-                value={companyDetails.remoteWorkPolicy} 
-                onChange={(e) => handleInputChange(e)}
+                name='remoteWorkPolicy'
+                required 
+                error={'remoteWorkPolicy' in errors}
+                helperText={'remoteWorkPolicy' in errors ? errors['remoteWorkPolicy'] : ''}
+                value={remoteWorkPolicy} 
+                onChange={(e) => setRemoteWorkPolicy(e.target.value)}
             />
-            <FormControl sx={{ minWidth: 200 }}>
+            <FormControl sx={{ minWidth: 200 }} error={'companySize' in errors}>
                 <InputLabel id='company-size-label'>Company Size</InputLabel>
                 <Select 
                     labelId='company-size-label'
@@ -49,16 +103,19 @@ const CompanyDetails = ({nextStep, handleInputChange, companyDetails}) => {
                     label='Company Size'
                     variant='outlined'
                     name='companySize'
-                    value={companyDetails.companySize}
-                    onChange={(e) => handleInputChange(e)}
+                    required
+                    error={'companySize' in errors}
+                    value={companySize}
+                    onChange={(e) => setCompanySize(e.target.value)}
                 >
                     <MenuItem value='0-10' >0-10</MenuItem>
                     <MenuItem value='10-50' >10-50</MenuItem>
                     <MenuItem value='50-100' >50-100</MenuItem>
                     <MenuItem value='100+' >100+</MenuItem>
                 </Select>
+                 {'companySize' in errors && <FormHelperText>{errors['companySize']}</FormHelperText>}
             </FormControl>
-            <FormControl sx={{ minWidth: 200 }}>
+            <FormControl sx={{ minWidth: 200 }} error={'fundingStage' in errors}>
                 <InputLabel id='funding-stage-label'>Funding Stage</InputLabel>
                 <Select 
                     labelId='funding-stage-label'
@@ -66,8 +123,10 @@ const CompanyDetails = ({nextStep, handleInputChange, companyDetails}) => {
                     label='Funding Stage'
                     variant='outlined'
                     name='fundingStage'
-                    value={companyDetails.fundingStage}
-                    onChange={(e) => handleInputChange(e)}
+                    required
+                    error={'fundingStage' in errors}
+                    value={fundingStage}
+                    onChange={(e) => setFundingStage(e.target.value)}
                 >
                     <MenuItem value="Pre-seed">Pre-seed</MenuItem>
                     <MenuItem value="Seed">Seed</MenuItem>
@@ -75,12 +134,13 @@ const CompanyDetails = ({nextStep, handleInputChange, companyDetails}) => {
                     <MenuItem value="Series B">Series B</MenuItem>
                     <MenuItem value="Series C">Series C</MenuItem>
                 </Select>
+                 {'fundingStage' in errors && <FormHelperText>{errors['fundingStage']}</FormHelperText>}
             </FormControl>
             <Button 
-                style={{textTransform: 'none'}} 
+                style={{textTransform: 'none', maxWidth: '100px', alignSelf: 'flex-end'}} 
                 variant="contained" 
                 disableElevation 
-                onClick={nextStep} 
+                onClick={handleContinue} 
                 size='medium'
             >
                 Continue
