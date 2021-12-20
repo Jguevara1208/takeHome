@@ -23,7 +23,7 @@ const RoleDetails = ({companyDetails, handleChange}) => {
     const [rolesState, setRolesState] = useState(companyDetails.roles)
     const [errors, setErrors] = useState(new Array(companyDetails.roles.length).fill({}))
 
-    const isValid = () => {
+    const isValid = (rolesState) => {
         const tempErrors = []
         let isError = false
         rolesState.forEach(role => {
@@ -44,7 +44,7 @@ const RoleDetails = ({companyDetails, handleChange}) => {
     const handleInputChange = (e, idx) => {
         const { name, value } = e.target
         const rolesCopy = [...rolesState]
-        rolesCopy[idx][name] = value 
+        rolesCopy[idx][name] = value
         setRolesState(rolesCopy)
     }
 
@@ -80,7 +80,6 @@ const RoleDetails = ({companyDetails, handleChange}) => {
             handleChange({roles: rolesState}, -1)
             return
         }
-
         const valid = isValid()
         if (valid === true) {
             setErrors([{}])
@@ -100,36 +99,36 @@ const RoleDetails = ({companyDetails, handleChange}) => {
     }
 
     return (
-        <form className='role-form' autocomplete="off" >
+        <form className='role-form' autoComplete="off" >
             <h1>Role Details</h1>
             {rolesState.map((role, idx) => (
                 <div key={`role-${idx}`} className='role-container'>
                     <div className='role-header'>
                         <h2>Role {idx+1}</h2>
                         {idx > 0 && (
-                            <IconButton 
-                                onClick={(e) => removeRole(e, idx)} 
+                            <IconButton
+                                onClick={(e) => removeRole(e, idx)}
                                 aria-label="delete"
-                            > 
+                            >
                                 <DeleteIcon />
                             </IconButton>
                         )}
                     </div>
-                    <TextField 
-                        id="outlined-basic" 
-                        label="Role Title" 
-                        variant="outlined" 
-                        name='roleTitle' 
+                    <TextField
+                        id="outlined-basic"
+                        label="Role Title"
+                        variant="outlined"
+                        name='roleTitle'
                         required
                         error={'roleTitle' in errors[idx]}
                         helperText={'roleTitle' in errors[idx] ? errors[idx]['roleTitle'] : ''}
-                        value={role.roleTitle} 
+                        value={role.roleTitle}
                         onChange={(e) => handleInputChange(e, idx)}
                         onBlur={onBlurValidate}
                     />
                     <FormControl sx={{ minWidth: 200 }} error={'division' in errors[idx]}>
                         <InputLabel id='division-label'>Division *</InputLabel>
-                        <Select 
+                        <Select
                             labelId='division-label'
                             id='division'
                             label='Division '
@@ -139,42 +138,42 @@ const RoleDetails = ({companyDetails, handleChange}) => {
                             error={'division' in errors[idx]}
                             value={role.division}
                             onChange={(e) => handleInputChange(e, idx)}
-                            onBlur={onBlurValidate}
+                            onFocus={onBlurValidate}
                         >
                             {divisions.map(div => <MenuItem key={div} value={div} >{div}</MenuItem> )}
                         </Select>
                         {'division' in errors[idx] && <FormHelperText>{errors[idx]['division']}</FormHelperText>}
                     </FormControl>
-                    <TextField 
-                        id="outlined-basic" 
-                        label="Location" 
-                        variant="outlined" 
-                        name='location' 
+                    <TextField
+                        id="outlined-basic"
+                        label="Location"
+                        variant="outlined"
+                        name='location'
                         required
                         error={'location' in errors[idx]}
                         helperText={'location' in errors[idx] ? errors[idx]['location'] : ''}
-                        value={role.location} 
+                        value={role.location}
                         onChange={(e) => handleInputChange(e, idx)}
                         onBlur={onBlurValidate}
                     />
-                    <TextField 
+                    <TextField
                         type='number'
                         InputLabelProps={{shrink: true}}
                         inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-                        id="outlined-basic" 
-                        label="Years of experience" 
-                        variant="outlined" 
+                        id="outlined-basic"
+                        label="Years of experience"
+                        variant="outlined"
                         name='experience'
                         required
                         error={'experience' in errors[idx]}
                         helperText={'experience' in errors[idx] ? errors[idx]['experience'] : ''}
-                        value={role.experience} 
+                        value={role.experience}
                         onChange={(e) => handleInputChange(e, idx)}
                         onBlur={onBlurValidate}
                     />
                     <Box className='slider' sx={{width: '95%'}}>
                         <InputLabel id='salary-label' error={'salary' in errors[idx]}>Salary {'salary' in errors[idx] && <FormHelperText style={{color: '#f44336'}}>{errors[idx]['salary']}</FormHelperText>}</InputLabel>
-                        <Slider 
+                        <Slider
                             min={50}
                             step={5}
                             max={300}
@@ -184,8 +183,8 @@ const RoleDetails = ({companyDetails, handleChange}) => {
                             valueLabelDisplay="auto"
                         />
                         <InputLabel id="non-linear-slider" error={'salary' in errors[idx]}>
-                            {role.salary[0] !== role.salary[1] 
-                            ? 
+                            {role.salary[0] !== role.salary[1]
+                            ?
                                 `$${role.salary[0]}K - $${role.salary[1]}K`
                             :
                                 `$${role.salary[0]}k`
@@ -195,32 +194,32 @@ const RoleDetails = ({companyDetails, handleChange}) => {
                 </div>
             ))}
             <div className='role-buttons'>
-                <Button 
-                    style={{textTransform: 'none'}} 
-                    variant="contained" 
-                    disableElevation 
-                    onClick={(e) =>handleContinue(e)} 
+                <Button
+                    style={{textTransform: 'none'}}
+                    variant="contained"
+                    disableElevation
+                    onClick={(e) =>handleContinue(e)}
                     size='medium'
                 >
                     Previous
                 </Button>
                 {rolesState.length < 3 && (
-                <Button 
-                    style={{textTransform: 'none'}} 
-                    variant="outlined" 
+                <Button
+                    style={{textTransform: 'none'}}
+                    variant="outlined"
                     startIcon={<AddCircleOutlineIcon/>}
-                    disableElevation 
-                    onClick={addRole} 
+                    disableElevation
+                    onClick={addRole}
                     size='medium'
                 >
                     Add role
                 </Button>
             )}
-                <Button 
-                    style={{textTransform: 'none'}} 
-                    variant="contained" 
-                    disableElevation 
-                    onClick={(e) => handleContinue(e, true)} 
+                <Button
+                    style={{textTransform: 'none'}}
+                    variant="contained"
+                    disableElevation
+                    onClick={(e) => handleContinue(e, true)}
                     size='medium'
                 >
                     Continue

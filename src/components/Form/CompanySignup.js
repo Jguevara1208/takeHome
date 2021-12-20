@@ -21,7 +21,7 @@ const CompanySignup = () => {
     const steps = ['Company Details', 'Role Details', 'Confirmation']
 
     const handleSubmit = () => {
-        console.log(companyDetails)
+        
     }
 
     const handleChange =  (obj, stepNum) => {

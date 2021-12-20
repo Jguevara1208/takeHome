@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import {TextField} from '@material-ui/core'
 import InputLabel from '@mui/material/InputLabel';
@@ -9,7 +9,6 @@ import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
 
 const CompanyDetails = ({handleChange, companyDetails}) => {
-
     const [username, setUsername] = useState(companyDetails.username)
     const [companyName, setCompanyName] = useState(companyDetails.companyName)
     const [location, setLocation] = useState(companyDetails.location)
@@ -27,10 +26,10 @@ const CompanyDetails = ({handleChange, companyDetails}) => {
         if (!companySize.length) errors['companySize'] = 'Company Size is required'
         if (!fundingStage.length) errors['fundingStage'] = 'Funding Stage is required'
         if (!username.length) errors['username'] = 'Company Username is required'
-        console.log(errors)
         if (Object.keys(errors).length) return errors
         return true
     }
+
 
     const handleContinue = (e) => {
         e.preventDefault()
@@ -57,7 +56,7 @@ const CompanyDetails = ({handleChange, companyDetails}) => {
     }
 
     return (
-        <form className='company-details-form' autocomplete="off" >
+        <form className='company-details-form' autoComplete="off" >
             <h1>Company Details</h1>
             <TextField 
                 id="outlined-basic" 
@@ -120,8 +119,8 @@ const CompanyDetails = ({handleChange, companyDetails}) => {
                     required
                     error={'companySize' in errors}
                     value={companySize}
-                    onChange={(e) => setCompanySize(e.target.value)}
-                    onBlur={onBlurValidate}
+                    onChange={(e) => {setCompanySize(e.target.value)}}
+                    onFocus={onBlurValidate}
                 >
                     <MenuItem value='0-10' >0-10</MenuItem>
                     <MenuItem value='10-50' >10-50</MenuItem>
@@ -142,7 +141,7 @@ const CompanyDetails = ({handleChange, companyDetails}) => {
                     error={'fundingStage' in errors}
                     value={fundingStage}
                     onChange={(e) => setFundingStage(e.target.value)}
-                    onBlur={onBlurValidate}
+                    onFocus={onBlurValidate}
                 >
                     <MenuItem value="Pre-seed">Pre-seed</MenuItem>
                     <MenuItem value="Seed">Seed</MenuItem>

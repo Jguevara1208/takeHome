@@ -9,8 +9,10 @@
 .notice {
     width: 50%;
     padding: 10px 50px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
+    justify-content: space-around;
     background-color: #bee4f8;
 }
 
@@ -37,6 +39,24 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.wrapper > h1 {
+    font-weight: 500;
+    font-size: 2.5em;
+    margin: 0;
+}
+
+.wrapper > p {
+    font-weight: 300;
+    font-size: .9em;
+    margin-top: 2px;
+    margin-bottom: 40px;
+}
+
+.notice > p {
+    font-weight: 300;
+    width: 90%;
 }
 
 /*         Company Details           */

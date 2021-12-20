@@ -17,7 +17,6 @@ const Confirmation = ({companyDetails, handleSubmit}) => {
                         <p>Experience required: {role.experience}</p>
                 </div>
             ))}
-
         </div>
     );
 };
