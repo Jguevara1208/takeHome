@@ -141,7 +141,7 @@ const RoleDetails = ({companyDetails, handleChange}) => {
                         label="Years of experience"
                         type='number'
                         name='experience'
-                        inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                        inputProps={{ inputMode: 'numeric', pattern: '[0-9]*', min: '0'}}
                         InputLabelProps={{shrink: true}}
                         required
                         error={'experience' in errors[idx]}

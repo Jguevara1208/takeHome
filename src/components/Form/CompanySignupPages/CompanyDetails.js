@@ -4,8 +4,12 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
+import FormLabel from '@mui/material/FormLabel';
 
 import {
     usernameValidations,
@@ -110,19 +114,30 @@ const CompanyDetails = ({handleChange, companyDetails}) => {
                 value={location} 
                 onChange={handleChangeInput}
             />
-            <TextField 
-                variant="outlined" 
-                label="Remote Work Policy" 
-                id="outlined-basic" 
-                name='remoteWorkPolicy'
-                multiline
-                rows={4}
-                required 
+            <FormControl 
+                sx={{ minWidth: 200 }}
                 error={'remoteWorkPolicy' in errors}
-                helperText={'remoteWorkPolicy' in errors ? errors['remoteWorkPolicy'] : ''}
-                value={remoteWorkPolicy} 
-                onChange={handleChangeInput}
-            />
+            >
+                <InputLabel id='company-size-label'>Remote Work Policy *</InputLabel>
+                <Select 
+                    variant='outlined'
+                    labelId='company-size-label'
+                    label='Remote Work Policy *'
+                    name='remoteWorkPolicy'
+                    required
+                    error={'remoteWorkPolicy' in errors}
+                    value={remoteWorkPolicy}
+                    onChange={handleChangeInput}
+                    style={{textAlign: 'left'}}
+                >
+                    <MenuItem value='In Office' >In Office</MenuItem>
+                    <MenuItem value='Fully Remote' >Fully Remote</MenuItem>
+                    <MenuItem value='Hybrid Remote' >Hybrid Remote</MenuItem>
+                </Select>
+                {'remoteWorkPolicy' in errors && (
+                    <FormHelperText>{errors['remoteWorkPolicy']}</FormHelperText>
+                )}
+            </FormControl>
             <FormControl 
                 sx={{ minWidth: 200 }}
                 error={'companySize' in errors}
@@ -138,7 +153,7 @@ const CompanyDetails = ({handleChange, companyDetails}) => {
                     error={'companySize' in errors}
                     value={companySize}
                     onChange={handleChangeInput}
-
+                    style={{textAlign: 'left'}}
                 >
                     <MenuItem value='0-10' >0-10</MenuItem>
                     <MenuItem value='10-50' >10-50</MenuItem>
@@ -164,6 +179,7 @@ const CompanyDetails = ({handleChange, companyDetails}) => {
                     error={'fundingStage' in errors}
                     value={fundingStage}
                     onChange={handleChangeInput}
+                    style={{textAlign: 'left'}}
                 >
                     <MenuItem value="Pre-seed">Pre-seed</MenuItem>
                     <MenuItem value="Seed">Seed</MenuItem>
