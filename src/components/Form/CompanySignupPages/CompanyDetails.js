@@ -59,7 +59,7 @@ const CompanyDetails = ({handleChange, companyDetails}) => {
     const handleChangeInput = (e) => {
         const { name, value } = e.target
         let res = validationMap[name](value)
-        const errorsCopy = {...errors}
+        const errorsCopy = { ...errors }
 
         if (res) errorsCopy[res[0]] = res[1] 
         else if (name in errorsCopy) delete errorsCopy[name]
@@ -166,7 +166,6 @@ const CompanyDetails = ({handleChange, companyDetails}) => {
                     error={'fundingStage' in errors}
                     value={fundingStage}
                     onChange={handleChangeInput}
-
                 >
                     <MenuItem value="Pre-seed">Pre-seed</MenuItem>
                     <MenuItem value="Seed">Seed</MenuItem>

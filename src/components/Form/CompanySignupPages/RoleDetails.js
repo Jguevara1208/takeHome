@@ -14,6 +14,15 @@ import FormHelperText from '@mui/material/FormHelperText';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
+import {
+    roleTitleValidations,
+    divisionValidations,
+    roleLocationValidations,
+    experienceValidations,
+    salaryValidations,
+    rolesValidationMap
+} from './validations'
+
 const RoleDetails = ({companyDetails, handleChange}) => {
 
     const divisions = ['Engineering', 'HR', 'Sales', 'Finance', 'Operations', 'People', 'Product', 'Data'];
@@ -23,28 +32,29 @@ const RoleDetails = ({companyDetails, handleChange}) => {
 
     const isValid = () => {
         const tempErrors = [];
-        let isError = false;
+
         rolesState.forEach(role => {
-            const roleErrors = {};
-            const { roleTitle, salary, division, location, experience } = role;
-            if (!roleTitle.length) roleErrors['roleTitle'] = 'Role title is required';
-            if (!division.length) roleErrors['division'] = 'Role division is required';
-            if (!location.length) roleErrors['location'] = 'Role location is required';
-            if (!experience.length) roleErrors['experience'] = 'Role years of experience is required';
-            if (salary[0] === 0 && salary[1] === 0) roleErrors['salary'] = 'Role salary is required';
-            if (Object.keys(roleErrors).length) isError = true;
+            const errorsArr = [
+                roleTitleValidations(role.roleTitle),
+                divisionValidations(role.division),
+                roleLocationValidations(role.location),
+                experienceValidations(role.experience),
+                salaryValidations(role.salary)
+            ]
+
+            const roleErrors = errorsArr.reduce((obj, err) => {
+                if (err !== null) obj[err[0]] = err[1]
+                return obj
+            }, {})
+
             tempErrors.push(roleErrors);
         });
-        if (isError) return tempErrors;
+
+        const isErrors = tempErrors.some(err => Object.keys(err).length > 0)
+        if (isErrors) return tempErrors
         return true;
     }
 
-    const handleInputChange = (e, idx) => {
-        const { name, value } = e.target;
-        const rolesCopy = [...rolesState];
-        rolesCopy[idx][name] = value;
-        setRolesState(rolesCopy);
-    }
 
     const addRole = (e) => {
         e.preventDefault();
@@ -67,6 +77,11 @@ const RoleDetails = ({companyDetails, handleChange}) => {
 
     const handleSalaryChange = (e, idx) => {
         const {value} = e.target;
+        let res = salaryValidations(value)
+        const errorsCopy = [ ...errors ]
+        if (res) errorsCopy[idx]['salary'] = res[1]
+        else if ('salary' in errorsCopy[idx]) delete errorsCopy[idx]['salary']
+
         const rolesCopy = [...rolesState];
         rolesCopy[idx].salary = value;
         setRolesState(rolesCopy);
@@ -74,10 +89,8 @@ const RoleDetails = ({companyDetails, handleChange}) => {
 
     const handleContinue = (e, next=false) => {
         e.preventDefault();
-        if (!next) {
-            handleChange({roles: rolesState}, -1);
-            return;
-        }
+        if (!next) return handleChange({roles: rolesState}, -1);
+
         const valid = isValid(); 
         if (valid === true) {
             setErrors([{}]);
@@ -85,6 +98,20 @@ const RoleDetails = ({companyDetails, handleChange}) => {
         } else {
             setErrors(valid);
         }
+    }
+
+    const handleInputChange = (e, idx) => {
+        const { name, value } = e.target
+        let res = rolesValidationMap[name](value)
+        const errorsCopy = [ ...errors ]
+        
+        if (res) errorsCopy[idx][res[0]] = res[1]
+        else if (name in errorsCopy[idx]) delete errorsCopy[idx][name]
+        setErrors(errorsCopy)
+
+        const rolesCopy = [ ...rolesState ]
+        rolesCopy[idx][name] = value 
+        setRolesState(rolesCopy)
     }
 
     return (
