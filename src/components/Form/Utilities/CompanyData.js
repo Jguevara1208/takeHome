@@ -27,4 +27,6 @@ export const roleTemplate = () => {
     }
 }
 
+export const divisions = ['Engineering', 'HR', 'Sales', 'Finance', 'Operations', 'People', 'Product', 'Data'];
+
 export default company

@@ -15,7 +15,7 @@ import {
     companySizeValidations,
     fundingStageValidations,
     validationMap
-    } from './validations'
+    } from '../Utilities/Validations'
 
 const CompanyDetails = ({handleChange, companyDetails}) => {
 
@@ -44,14 +44,12 @@ const CompanyDetails = ({handleChange, companyDetails}) => {
 
     const handleContinue = (e) => {
         e.preventDefault();
-
         const valid = isValid();
         const company = { 
             username, companyName, 
             location, remoteWorkPolicy, 
             companySize, fundingStage 
         }
-
         if (!Object.keys(valid).length) handleChange(company, 1);
         setErrors(valid);
     };

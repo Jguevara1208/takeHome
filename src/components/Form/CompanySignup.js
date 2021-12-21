@@ -1,5 +1,5 @@
 import { useState } from "react";
-import company from './CompanyData';
+
 import InfoIcon from '@mui/icons-material/Info';
 import CompanyDetails from './CompanySignupPages/CompanyDetails';
 import RoleDetails from './CompanySignupPages/RoleDetails';
@@ -8,6 +8,8 @@ import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
+
+import company from './Utilities/CompanyData';
 import './CompanySignup.css';
 
 const CompanySignup = () => {

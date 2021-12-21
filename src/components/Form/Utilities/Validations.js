@@ -83,3 +83,32 @@ export const rolesValidationMap = {
     'experience': experienceValidations,
     'salary': salaryValidations,
 }
+
+/*---------------------------------------------------------------------------------*/
+/*-------------------------Roles Validation Utilities------------------------------*/
+/*---------------------------------------------------------------------------------*/
+
+export const isValidRoles = (rolesState) => {
+    const tempErrors = [];
+
+    rolesState.forEach(role => {
+        const errorsArr = [
+            roleTitleValidations(role.roleTitle),
+            divisionValidations(role.division),
+            roleLocationValidations(role.location),
+            experienceValidations(role.experience),
+            salaryValidations(role.salary)
+        ]
+
+        const roleErrors = errorsArr.reduce((obj, err) => {
+            if (err !== null) obj[err[0]] = err[1]
+            return obj
+        }, {})
+
+        tempErrors.push(roleErrors);
+    });
+
+    const isErrors = tempErrors.some(err => Object.keys(err).length > 0)
+    if (isErrors) return tempErrors
+    return true;
+}
