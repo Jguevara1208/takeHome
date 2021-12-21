@@ -22,7 +22,7 @@ const RoleDetails = ({companyDetails, handleChange}) => {
     const [rolesState, setRolesState] = useState(companyDetails.roles);
     const [errors, setErrors] = useState(new Array(companyDetails.roles.length).fill({}));
 
-    const addRole = (e, rolesState) => {
+    const addRole = (e) => {
         const rolesCopy = [...rolesState];
         if (rolesCopy.length < 3) {
             setErrors([...errors, {}]);
@@ -88,7 +88,6 @@ const RoleDetails = ({companyDetails, handleChange}) => {
             {rolesState.map((role, idx) => (
                 <div key={`role-${idx}`} className='role-container'>
                     <div className='role-header'>
-                        <h2>Role {idx + 1}</h2>
                         {idx > 0 && (
                             <IconButton
                                 onClick={(e) => removeRole(e, idx)}

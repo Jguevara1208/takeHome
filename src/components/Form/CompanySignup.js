@@ -22,9 +22,12 @@ const CompanySignup = () => {
         const db = localStorage.getItem('companies');
         const parsedDb = db ? {...JSON.parse(db), [key]: companyDetails} : {[key]: companyDetails};
         localStorage.setItem('companies', JSON.stringify(parsedDb));
+        const companyCopy = { ...companyDetails }
+        companyCopy.step += 1
+        setCompanyDetails(companyCopy)
     }
 
-    const handleChange =  (obj, stepNum) => {
+    const handleChange = (obj, stepNum) => {
         const companyCopy = { ...companyDetails };
         const keys = Object.keys(obj);
         keys.forEach(key => companyCopy[key] = obj[key]);
